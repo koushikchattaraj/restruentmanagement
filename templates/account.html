@@ -62,7 +62,7 @@
             <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                 <!-- Profile -->
                 <div class="updateform">
-                    <form action="" method="post" autocomplete="off" >
+                    <form action="" method="post" autocomplete="off" enctype="multipart/form-data" >
                         {% csrf_token %}    
                         <h6>Name : <input type="text"  class="inputtext" name="name" style="border-style: hidden;" placeholder="{{user.name}}"></h6>
                         <hr>
@@ -75,6 +75,8 @@
                         <h6>Bio : <input type="text" class="inputtext" name="bio" style="border-style: hidden;" placeholder={{user.bio}}></h6>
                         <hr>
                         <h6>About : <input type="text" class="inputtext" name="about" style="border-style: hidden;" placeholder={{user.about}}></h6>
+                        <hr>
+                        <h6>Image : <input type="file" id="myFile" name="profilephoto" name="filename"></h6>
                         <hr>
                 </div>
                 <button class="button btn btn-primary" id="updatebtn" type="submit" style="

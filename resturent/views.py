@@ -67,9 +67,6 @@ class SigninView(View):
         if user is not None:
             # A backend authenticated the credentials
             auth.login(request, user)
-            print(dir(user.userprofile))
-            msg = f'Hi {user.userprofile.name}'
-            messages.success(request,msg)
             return redirect ('/profile')
         else:
             print('failed to login')
@@ -161,6 +158,7 @@ class AccountView(View):
         about = request.POST.get("about")
         bio = request.POST.get("bio")
         phoneno = request.POST.get("phoneno")
+        image = request.FILES.get("profilephoto")
         user = UserProfile.objects.get(phoneno=phoneno)
         if name:
             user.name = name
@@ -172,10 +170,9 @@ class AccountView(View):
             user.about = about
         if bio:
             user.bio = bio
+        if image:
+            user.dpimage = image
         user.save()
 
         messages.success(request,"Your Profile is Sucessfully Updated!")
         return redirect("/profile")
-
-        
-        return HttpResponse("html")
