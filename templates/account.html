@@ -9,15 +9,19 @@
     <div class="profile">
         <div class="profile-pic">
             <div class="header-color"></div>
-            <img src= {{ user.dpimage.url }} alt="Profile Picture">
+            <img src= {{ userprofile.dpimage.url }} alt="Profile Picture">
         </div>
         <div class="title">
-            <h1>{{ user.name }}</h1>
-            <h2><span class="highlighted">{{ user.bio }}</span> </h2>
+            <h1>{{ userprofile.name }}</h1>
+            {% if userprofile.bio is not None%}
+            <h2><span class="highlighted">{{ userprofile.bio }}</span> </h2>
+            {% endif %}
         </div>
+        {% if userprofile.about is not None%}
         <div class="description">
-            <p>{{user.about}}</p>
+            <p>{{userprofile.about}}</p>
         </div>
+        {% endif %}
         <button class="follow">Follow</button>
         <div class="messagediv"> 
             {% if messages %}
@@ -43,38 +47,50 @@
           </ul>
           <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                {% for obj in newsfeed %}
                 <div class="images-container">
                     <div class="image">
-                        <img class="imgs" src="https://anniedotexe.github.io/hosted-assets/dailyui/dailyui006/dinner.jpg" alt="Image Post">
-                        <i class="fas fa-heart"><span>70,418</span></i>
+                        {% if obj.title is not None %}
+                        <b class=""><span>{{ obj.title }}</span></b><br>
+                        {% endif %}
+                        {% if obj.postimage.url is not None %}
+                        <img class="imgs" src={{ obj.postimage.url }} alt="Image Post">
+                        {% endif %}
+                        <i class="mt-5"><span><b style="font-size:24px" class="fa">&#xf087;</b> {{ obj.like }}</span></i>
+                        <hr>
                     </div>
                 </div>
-                <div class="images-container">
-                    <div class="image">
-                        <img class="imgs" src="https://anniedotexe.github.io/hosted-assets/dailyui/dailyui006/dinner.jpg" alt="Image Post">
-                        <i class="fas fa-heart"><span>70,418</span></i>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                 <!-- Post Images Image -->
+                <div class="form-group">
+                <form action="post-feed" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" class="form-control" name="title" placeholder="Title">
+                    <input type="text" class="form-control mt-2" name="des" style="height: 80px;" placeholder="Description">
+                    <input type="file" class="form-control mt-2" name="postimage" id="" style="height: 45px;"><br>
+                    <button class="button btn btn-primary" id="postbtn" type="submit" style="
+                width: auto;">Post</button>
+                </form>
+            </div>
             </div>
             <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                 <!-- Profile -->
                 <div class="updateform">
                     <form action="" method="post" autocomplete="off" enctype="multipart/form-data" >
                         {% csrf_token %}    
-                        <h6>Name : <input type="text"  class="inputtext" name="name" style="border-style: hidden;" placeholder="{{user.name}}"></h6>
+                        <h6>Name : <input type="text"  class="inputtext" name="name" style="border-style: hidden;" placeholder="{{userprofile.name}}"></h6>
                         <hr>
-                        <h6>Phone No : <input type="text" name="phoneno" value="{{user.phoneno}}" readonly class="inputtext" style="border-style: hidden; color: #ac8680;" placeholder={{user.phoneno}}></h6>
+                        <h6>Phone No : <input type="text" name="phoneno" value="{{userprofile.phoneno}}" readonly class="inputtext" style="border-style: hidden; color: #ac8680;" placeholder={{userprofile.phoneno}}></h6>
                         <hr>
-                        <h6>Address : <input type="text" class="inputtext" name="address" style="border-style: hidden;" placeholder={{user.address}}></h6>
+                        <h6>Address : <input type="text" class="inputtext" name="address" style="border-style: hidden;" placeholder={{userprofile.address}}></h6>
                         <hr>
-                        <h6>Pincode : <input type="text" pattern="[0-9]{6}" maxlength="6" class="inputtext" name="pincode" style="border-style: hidden;" placeholder={{user.pincode}}></h6>
+                        <h6>Pincode : <input type="text" pattern="[0-9]{6}" maxlength="6" class="inputtext" name="pincode" style="border-style: hidden;" placeholder={{userprofile.pincode}}></h6>
                         <hr>
-                        <h6>Bio : <input type="text" class="inputtext" name="bio" style="border-style: hidden;" placeholder={{user.bio}}></h6>
+                        <h6>Bio : <input type="text" class="inputtext" name="bio" style="border-style: hidden;" placeholder={{userprofile.bio}}></h6>
                         <hr>
-                        <h6>About : <input type="text" class="inputtext" name="about" style="border-style: hidden;" placeholder={{user.about}}></h6>
+                        <h6>About : <input type="text" class="inputtext" name="about" style="border-style: hidden;" placeholder={{userprofile.about}}></h6>
                         <hr>
                         <h6>Image : <input type="file" id="myFile" name="profilephoto" name="filename"></h6>
                         <hr>
@@ -96,6 +112,8 @@
     setTimeout(function() {
     $('.messagediv').fadeOut('fast');
 }, 1000);
+
+
   </script>
 
 {% endblock %}

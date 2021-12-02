@@ -173,10 +173,14 @@ a:focus {
   border-radius: 5px;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
+  -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: whitesmoke;
 }
 
 .custom_nav-container .navbar-nav .nav-item:hover .nav-link, .custom_nav-container .navbar-nav .nav-item.active .nav-link {
   color: #ffbe33;
+  
 }
 
 .custom_nav-container .nav_search-btn {
@@ -186,6 +190,7 @@ a:focus {
   border: none;
   color: #ffffff;
   margin: 0 10px;
+  
 }
 
 .custom_nav-container .nav_search-btn:hover {
@@ -239,7 +244,7 @@ a:focus {
 .user_option .order_online {
   display: inline-block;
   padding: 8px 30px;
-  background-color: #ffbe33;
+  background-color: #e6422d;
   color: #ffffff;
   border-radius: 45px;
   -webkit-transition: all 0.3s;

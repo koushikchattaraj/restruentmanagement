@@ -11,5 +11,9 @@ urlpatterns = [
     path('sign-in',views.SigninView.as_view(),name="signinview"),
     path('sign-up',views.SignupView.as_view(),name="signupview"),
     path('profile',views.AccountView.as_view(),name="accountview"),
+    path('profile/<str:pk>',views.ProfileView.as_view(),name="profileview"),
+    path('logout',views.LogoutView.as_view(),name="logoutview"),
+    path('post-feed',views.PostFeedView.as_view(),name="PostFeedView"),
+    path('user-list',views.AllUserView.as_view(),name="alluserview"),
     path('signupajax',views.SignUpajaxView.as_view(),name="signupajaxview"),
 ]
