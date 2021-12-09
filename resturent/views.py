@@ -11,6 +11,13 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+import numpy as np
+import cv2 as cv
+from matplotlib import pyplot as plt
+import sys
+from  PIL  import Image
+from django.core.files.storage import FileSystemStorage
+
 
 
 
@@ -30,7 +37,14 @@ class IndexView(View):
     template_name = 'index.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        if request.user.is_authenticated:
+            playerlist = UserProfile.objects.filter(role="player").exclude(user=request.user)
+        else:
+            playerlist = UserProfile.objects.filter(role="player")
+        context = {
+            'playerlist':playerlist
+        }
+        return render(request, self.template_name,context)
 
 class AboutView(View):
 
@@ -51,7 +65,14 @@ class MenuView(View):
     template_name = 'menu.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        if request.user.is_authenticated:
+            playerlist = UserProfile.objects.filter(role="player").exclude(user=request.user)
+        else:
+            playerlist = UserProfile.objects.filter(role="player")
+        context = {
+            'playerlist':playerlist
+        }
+        return render(request, self.template_name,context)
 
 
 class SigninView(View):
@@ -92,7 +113,7 @@ class SignupView(View):
         name = request.POST.get("name")
         phone_no = request.POST.get("phoneno")
         email = request.POST.get("email")
-        refferal = request.POST.get("refferal")
+        playingtype = request.POST.get("type")
         address = request.POST.get("address")
         pincode = request.POST.get("pincode")
         password = request.POST.get("password")
@@ -102,11 +123,6 @@ class SignupView(View):
             if user:
                 messages.warning(request,"Phone No already Exits!!!!!!!!!!")
                 return redirect('/sign-up')
-            if refferal:
-                user = UserProfile.objects.filter(reffer_by=refferal).first()
-                if user is None:
-                    messages.warning(request,"Reffer code dose not exits!!!!!!!!!!")
-                    return redirect('/sign-up')
 
             user = User.objects.create(username=phone_no,email=email)
             user.set_password(password)
@@ -116,7 +132,7 @@ class SignupView(View):
             return redirect('/sign-up')
 
         try:
-            userprofile = UserProfile.objects.create(user=user,name=name,phoneno=phone_no,email=email,reffer_by=refferal,address=address,pincode=pincode,refferal_code=refferal_code(),otp=send_otp(),is_active=True,token = token_generator(),dpimage='/profile/usericon.png',role='user')
+            userprofile = UserProfile.objects.create(user=user,name=name,phoneno=phone_no,email=email,address=address,pincode=pincode,otp=send_otp(),is_active=True,token = token_generator(),dpimage='/profile/usericon.png',role='player',type=playingtype)
             # print(userprofile.otp)
             # if userprofile.otp == otp:
             #     userprofile.is_active = True
@@ -180,6 +196,63 @@ class AccountView(View):
         if bio:
             user.bio = bio
         if image:
+            # folder = "media/profile"
+            # fs = FileSystemStorage(location=folder) #defaults to   MEDIA_ROOT  
+            # filename = fs.save(image.name, image)
+            # file_url = fs.url(filename)
+            # print("*********")
+            # img = cv.imread(f"media/profile/{image.name}", cv.IMREAD_UNCHANGED)
+            # original = img.copy()
+
+            # l = int(max(5, 6))
+            # u = int(min(6, 6))
+
+            # ed = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+            # edges = cv.GaussianBlur(img, (21, 51), 3)
+            # edges = cv.cvtColor(edges, cv.COLOR_BGR2GRAY)
+            # edges = cv.Canny(edges, l, u)
+
+            # _, thresh = cv.threshold(edges, 0, 255, cv.THRESH_BINARY  + cv.THRESH_OTSU)
+            # kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
+            # mask = cv.morphologyEx(thresh, cv.MORPH_CLOSE, kernel, iterations=4)
+
+            # data = mask.tolist()
+            # sys.setrecursionlimit(10**8)
+            # for i in  range(len(data)):
+            #     for j in  range(len(data[i])):
+            #         if data[i][j] !=  255:
+            #             data[i][j] =  -1
+            #         else:
+            #             break
+            #     for j in  range(len(data[i])-1, -1, -1):
+            #         if data[i][j] !=  255:
+            #             data[i][j] =  -1
+            #         else:
+            #             break
+            # image = np.array(data)
+            # image[image !=  -1] =  255
+            # image[image ==  -1] =  0
+
+            # mask = np.array(image, np.uint8)
+
+            # result = cv.bitwise_and(original, original, mask=mask)
+            # result[mask ==  0] =  255
+            # cv.imwrite('bg.png', result)
+
+            # img = Image.open('bg.png')
+            # img.convert("RGBA")
+            # datas = img.getdata()
+
+            # newData = []
+            # for item in datas:
+            #     if item[0] ==  255  and item[1] ==  255  and item[2] ==  255:
+            #         newData.append((255, 255, 255, 0))
+            #     else:
+            #         newData.append(item)
+
+            # img.putdata(newData)
+            # img.save("media/profile/img.png", "PNG")
+
             user.dpimage = image
 
         user.save()

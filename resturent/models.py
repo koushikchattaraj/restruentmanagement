@@ -8,8 +8,6 @@ class UserProfile(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
     phoneno = models.IntegerField(unique=True,null=True, blank=True)
     email = models.EmailField(unique=True,null=True, blank=True)
-    reffer_by = models.CharField(max_length=5, null=True, blank=True)
-    refferal_code = models.CharField(max_length=5, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     pincode = models.IntegerField(null=True, blank=True)
     token = models.CharField(null=True, blank=True, max_length=30)
@@ -17,15 +15,21 @@ class UserProfile(models.Model):
     dpimage = models.ImageField(upload_to='profile', null=True, blank=True)
     bio = models.CharField(max_length=100, null=True, blank=True)
     about = models.CharField(max_length=250, null=True, blank=True)
-    follower = models.IntegerField(default=0)
     
-
     ROLE_CHOICES = (
         ('admin', 'admin'),
         ('user', 'user'),
-        ('vendor', 'vendor'),
+        ('player', 'player'),
     )
-    role = models.CharField(max_length=6, null=True, blank=True, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=20, null=True, blank=True, choices=ROLE_CHOICES)
+    PLAY_CHOICES = (
+        ('cricket', 'cricket'),
+        ('football', 'football'),
+        ('vollyball', 'volyball'),
+        ('kabadi', 'kabadi'),
+    )
+    type = models.CharField(max_length=20, null=True, blank=True, choices=PLAY_CHOICES)
+
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
